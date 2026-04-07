@@ -95,9 +95,6 @@ The response contains:
 - `email`
 - `role` (`USER` or `ADMIN`)
 
-### Admin role
-
-There is no API endpoint to promote a user to `ADMIN`. To test admin-only product operations, update the user’s `role` in the database.
 
 ## Example flow
 
@@ -152,24 +149,6 @@ Authentication failures are returned as HTTP `401` with a plain `Unauthorized` m
 ## Stock behavior
 
 Stock is decremented during checkout (not reserved when items are added to cart). The cart add endpoint checks stock for the requested add quantity.
-
-## Checkout sequence
-
-```mermaid
-sequenceDiagram
-  participant Client
-  participant API
-  participant DB as Database
-  participant Stripe
-
-  Client->>API: POST /api/orders/checkout (stripeToken)
-  API->>DB: Load cart + compute total
-  API->>Stripe: Create charge (USD, amount in cents)
-  Stripe-->>API: chargeId
-  API->>DB: Create order + decrement stock
-  API->>DB: Clear cart
-  API-->>Client: 200 OrderResponse
-```
 
 ## API reference
 
